@@ -33,6 +33,7 @@ class Era:
     start: Time
     end: Time
 
+    @property
     def duration(self) -> Duration:
         return self.end - self.start
 
@@ -92,6 +93,20 @@ def interval(start, end) -> Active[Time]:
 
 
 ui = lambda: interval(0, 1)
+
+
+def stretch(active: Active[A], factor: float) -> Active[A]:
+    def f(a):
+        return a
+
+    def g(d):
+        s = d.era.start
+        Δ = d.era.duration
+        e_new = s + factor * Δ
+        func_new = lambda t: d.func(s + (t - s) / factor)
+        return make_active(s, e_new, func_new)
+
+    return on_active(f, g, active)
 
 
 def simulate(rate, active: Active[A]) -> List[A]:
