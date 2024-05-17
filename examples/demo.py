@@ -1,10 +1,3 @@
-Animations in Chalk.
-
-⚠️ Work in progress
-
-Current example:
-
-```python
 from animation.core import constant, animation, render_gif
 from colour import Color
 from chalk import circle, rectangle
@@ -16,7 +9,4 @@ obj = circle(1).fill_color(blue)
 frame = rectangle(6, 3).fill_color(papaya)
 
 anim = constant(frame) + animation(lambda t: obj.translate(2 * t - 1, 0))
-render_gif(anim, "examples/output/test.gif", 24)
-```
-
-![demo](examples/output/demo.gif)
+render_gif(anim, "examples/output/demo.gif", 24)

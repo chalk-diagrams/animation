@@ -4,7 +4,6 @@
 # User Defined
 .vscode
 .DS_Store
-output
 
 # Distribution / packaging
 *.egg-info/

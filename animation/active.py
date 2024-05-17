@@ -12,8 +12,10 @@ which in turn is inspired by
 
 """
 
-from dataclasses import dataclass
 from typing import Callable, Generic, List, TypeVar
+from dataclasses import dataclass
+
+from chalk.monoid import Monoid
 
 import numpy as np
 
@@ -23,6 +25,7 @@ Duration = float
 
 A = TypeVar("A")
 B = TypeVar("B")
+M = TypeVar("M", bound=Monoid)
 
 
 @dataclass
@@ -33,10 +36,16 @@ class Era:
     def duration(self) -> Duration:
         return self.end - self.start
 
+    def __add__(self, other: "Era") -> "Era":
+        s = min(self.start, other.start)
+        e = max(self.end, other.end)
+        return Era(s, e)
+
 
 @dataclass
 class Active(Generic[A]):
-    pass
+    def __add__(self, other: "Active[A]") -> "Active[A]":
+        return add(self, other)
 
 
 @dataclass
@@ -48,6 +57,18 @@ class Constant(Active, Generic[A]):
 class Dynamic(Active, Generic[A]):
     era: Era
     func: Callable[[Time], A]
+
+
+def add(a1: Active[M], a2: Active[M]) -> Active[M]:
+    match (a1, a2):
+        case (Constant(v1), Constant(v2)):
+            return Constant(v1 + v2)
+        case (Constant(v1), Dynamic(e2, f2)):
+            return Dynamic(e2, lambda t: v1 + f2(t))
+        case (Dynamic(e1, f1), Constant(v2)):
+            return Dynamic(e1, lambda t: f1(t) + v2)
+        case (Dynamic(e1, f1), Dynamic(e2, f2)):
+            return Dynamic(e1 + e2, lambda t: f1(t) + f2(t))
 
 
 def make_active(start: Time, end: Time, func: Callable[[Time], A]) -> Active[A]:
