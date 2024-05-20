@@ -17,10 +17,11 @@ def animation(func: Callable[[Time], Diagram], start=0, end=1) -> Animation:
     return Dynamic(Era(start, end), func)
 
 
-def render_gif(active: Animation, path: str, rate: float) -> None:
-    path_frame = "/tmp/frame.png"
-    with imageio.get_writer(path, mode="I", fps=rate) as writer:
-        for frame in simulate(rate, active):
-            frame.render_png(path_frame)
-            image = imageio.imread(path_frame)
+def render_gif(active: Animation, path: str, rate: float, **kwargs) -> None:
+    path_frame = "/tmp/frame-{:d}.png"
+    with imageio.get_writer(path, fps=rate, **kwargs) as writer:
+        for i, frame in enumerate(simulate(rate, active)):
+            path = path_frame.format(i)
+            frame.render_png(path)
+            image = imageio.imread(path)
             writer.append_data(image)
