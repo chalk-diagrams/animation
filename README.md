@@ -24,7 +24,6 @@ render_gif(anim, "examples/output/demo.gif", 24)
 
 ![demo](examples/output/demo.gif)
 
-
-For a more elaborate example, see [`examples/pythagoras.py`](examples/pythagoras.py) directory.
+For a more elaborate example, see [`examples/pythagoras.py`](examples/pythagoras.py).
 
 ![pythagoras](examples/output/pythagoras.gif)
