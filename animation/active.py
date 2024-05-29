@@ -220,7 +220,7 @@ def movie_add(actives: List[Active[M]]) -> Active[M]:
     return reduce(sequence_add, actives)
 
 
-def splice(a1: Active[M], a2: Active[M]) -> Active[M]:
+def splice(a1: Active[A], a2: Active[A]) -> Active[A]:
     """Much uglier than the Haskell version `|>>`."""
     a2_new = after(a2, a1)
     match (a1, a2_new):
@@ -235,7 +235,7 @@ def splice(a1: Active[M], a2: Active[M]) -> Active[M]:
             return a1 + a2_new
 
 
-def movie(actives: List[Active[A]]) -> Active[A]:
+def movie(*actives: Active[A]) -> Active[A]:
     return reduce(splice, actives)
 
 
